@@ -1,19 +1,15 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django_auto_one_to_one import AutoOneToOneModel
 
 
-class Blog(models.Model):
+class Blog(AutoOneToOneModel(get_user_model())):
     """
     Blog model
 
     Attributes:
         user (User): a user that a blog belongs to
     """
-
-    user = models.OneToOneField(
-        get_user_model(),
-        on_delete=models.CASCADE
-    )
 
     def __str__(self):
         return f'the blog of the user {self.user}'
