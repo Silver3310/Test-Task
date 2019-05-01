@@ -42,6 +42,9 @@ class SubscribeView(View):
             blog_id=kwargs['blogger_id']
         )
         if potential_sub.exists():
+            # mark all the posts that as unread by that subscription
+            posts_list = Post.objects.filter(blog_id=kwargs['blogger_id'])
+            ReadPosts.objects.filter(user=request.user, post__in=posts_list).delete()
             # delete the current subscription
             potential_sub.delete()
         else:
