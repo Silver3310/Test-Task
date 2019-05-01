@@ -18,5 +18,10 @@ urlpatterns = [
         'subscribe/<int:blogger_id>/',
         views.SubscribeView.as_view(),
         name='subscribe'
+    ),
+    path(
+        'news-feed/',
+        views.NewsFeedListView.as_view(),
+        name='news-feed'
     )
 ]

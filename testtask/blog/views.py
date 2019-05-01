@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
-from .models import Subscription
+from .models import Subscription, Post
 
 
 class HomePageView(TemplateView):
@@ -52,3 +52,17 @@ class SubscribeView(View):
             ).save()
 
         return HttpResponseRedirect(reverse('bloggers'))
+
+
+class NewsFeedListView(ListView):
+    """
+    News feed view shows posts from blogs a user subscribed to
+    """
+
+    template_name = 'blog/newsfeed.html'
+    paginate_by = 100  # if pagination is desired
+
+    def get_queryset(self):
+        blogs_list = Subscription.all_bloggers_of(self.request.user)
+        queryset = Post.objects.filter(blog__in=blogs_list).order_by('-timestamp')
+        return queryset

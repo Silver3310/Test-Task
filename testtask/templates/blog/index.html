@@ -5,7 +5,7 @@ Welcome
 {% endblock %}
 
 {% block content %}
-<a href="/bloggers/">Bloggers</a>
-<a href="#">News Feed</a>
+<a href="{% url 'bloggers' %}">Bloggers</a>
+<a href="{% url 'news-feed' %}">News Feed</a>
 <a href="#">My blog</a>
 {% endblock %}
