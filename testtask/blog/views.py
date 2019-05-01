@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
-from .models import Subscription, Post
+from .models import Subscription, Post, ReadPosts
 
 
 class HomePageView(TemplateView):
@@ -66,3 +66,31 @@ class NewsFeedListView(ListView):
         blogs_list = Subscription.all_bloggers_of(self.request.user)
         queryset = Post.objects.filter(blog__in=blogs_list).order_by('-timestamp')
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['read_news'] = ReadPosts.all_read_posts_of(self.request.user)
+        return context
+
+
+class ReadNewsView(View):
+    """
+    Read news view handles whether to delete or create a new mark
+    """
+
+    def post(self, request, **kwargs):
+        potential_sub = ReadPosts.objects.filter(
+            user=request.user,
+            post_id=kwargs['news_id']
+        )
+        if potential_sub.exists():
+            # delete the current mark
+            potential_sub.delete()
+        else:
+            # create a new mark
+            ReadPosts(
+                user=request.user,
+                post_id=kwargs['news_id']
+            ).save()
+
+        return HttpResponseRedirect(reverse('news-feed'))

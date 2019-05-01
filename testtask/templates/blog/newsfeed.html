@@ -11,6 +11,13 @@ News Feed
            <p>{{ news.title }}</p>
            <p>{{ news.text }}</p>
            <p>{{ news.timestamp }}</p>
+           <form method="post" action="{% url 'read-news' news_id=news.id %}">{% csrf_token %}
+           {% if news.id in read_news %}
+               <button type="submit">Mark as unread</button>
+           {% else %}
+               <button type="submit">Mark as read</button>
+           {% endif %}
+           </form>
         </li>
     {% endfor %}
 </ul>

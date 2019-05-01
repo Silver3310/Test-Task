@@ -23,5 +23,10 @@ urlpatterns = [
         'news-feed/',
         views.NewsFeedListView.as_view(),
         name='news-feed'
+    ),
+    path(
+        'read-news/<int:news_id>/',
+        views.ReadNewsView.as_view(),
+        name='read-news'
     )
 ]

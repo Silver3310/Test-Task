@@ -75,7 +75,6 @@ class ReadPosts(models.Model):
     Attributes:
         user (User): a user who has read the post
         post (Post): a post that a user has read
-        is_read (bool): True if a user has read the post, False otherwise
     """
 
     user = models.ForeignKey(
@@ -86,4 +85,8 @@ class ReadPosts(models.Model):
         Post,
         on_delete=models.CASCADE
     )
-    is_read = models.BooleanField
+
+    @staticmethod
+    def all_read_posts_of(user):
+        list_of_posts = ReadPosts.objects.filter(user=user)
+        return [post.post_id for post in list_of_posts]
