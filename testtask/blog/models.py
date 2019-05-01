@@ -51,7 +51,6 @@ class Subscription(models.Model):
     Attributes:
         user (User): a subscriber
         blog (Blog): a blog that a user is subscribed to
-        is_subscribed (bool): True if subscribed, False otherwise
     """
 
     user = models.ForeignKey(
@@ -62,7 +61,11 @@ class Subscription(models.Model):
         Blog,
         on_delete=models.CASCADE
     )
-    is_subscribed = models.BooleanField
+
+    @staticmethod
+    def all_bloggers_of(user):
+        list_of_blogs = Subscription.objects.filter(user=user)
+        return [blog.blog_id for blog in list_of_blogs]
 
 
 class ReadPosts(models.Model):
