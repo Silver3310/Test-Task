@@ -5,6 +5,8 @@ from django.views import View
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
+from django.core.mail import send_mail
+from django.conf import settings
 
 from .models import Subscription, Post, ReadPosts, Blog
 from .forms import PostForm
@@ -102,6 +104,9 @@ class ReadNewsView(View):
 
 
 class PostFormView(FormView):
+    """
+    Post from view is to add a new post through a website interface
+    """
     form_class = PostForm
     template_name = 'blog/add_post.html'
     success_url = reverse_lazy('add-post')
@@ -112,10 +117,14 @@ class PostFormView(FormView):
             text=form.cleaned_data['text'],
             blog=Blog.objects.get(user=self.request.user)
         )
+        email(self.request)
         return super().form_valid(form)
 
 
 class PersonalBlogListView(ListView):
+    """
+    a list of a user's own posts
+    """
     template_name = 'blog/personal_blog.html'
     paginate_by = 100
 
@@ -123,3 +132,15 @@ class PersonalBlogListView(ListView):
         blog = Blog.objects.get(user=self.request.user)
         queryset = Post.objects.filter(blog=blog).order_by('-timestamp')
         return queryset
+
+
+def email(request):
+    """
+    send an email as a notification to other users
+    """
+    subject = f'New Post from your subscriber {request.user}'
+    message = 'link'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = Subscription.all_subscribers_emails(request.user)
+    send_mail(subject, message, email_from, recipient_list)
+    return HttpResponseRedirect(reverse('index'))

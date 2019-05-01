@@ -64,8 +64,20 @@ class Subscription(models.Model):
 
     @staticmethod
     def all_bloggers_of(user):
+        """
+        all bloggers that a user follows
+        """
         list_of_blogs = Subscription.objects.filter(user=user)
         return [blog.blog_id for blog in list_of_blogs]
+
+    @staticmethod
+    def all_subscribers_emails(user):
+        """
+        Return emails of a user's subscribers
+        """
+        blog = Blog.objects.get(user=user)
+        list_of_subscriptions = Subscription.objects.filter(blog=blog)
+        return [sub.user.email for sub in list_of_subscriptions]
 
 
 class ReadPosts(models.Model):
@@ -88,5 +100,8 @@ class ReadPosts(models.Model):
 
     @staticmethod
     def all_read_posts_of(user):
+        """
+        all the posts that a user marked as read
+        """
         list_of_posts = ReadPosts.objects.filter(user=user)
         return [post.post_id for post in list_of_posts]
