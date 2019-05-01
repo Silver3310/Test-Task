@@ -6,8 +6,6 @@ from django.views import View
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from django.core.mail import send_mail
-from django.conf import settings
 
 from .models import Subscription, Post, ReadPosts, Blog
 from .forms import PostForm
