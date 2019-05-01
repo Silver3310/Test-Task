@@ -28,5 +28,15 @@ urlpatterns = [
         'read-news/<int:news_id>/',
         views.ReadNewsView.as_view(),
         name='read-news'
+    ),
+    path(
+        'add-post/',
+        views.PostFormView.as_view(),
+        name='add-post'
+    ),
+    path(
+        'personal-blog/',
+        views.PersonalBlogListView.as_view(),
+        name='personal-blog'
     )
 ]

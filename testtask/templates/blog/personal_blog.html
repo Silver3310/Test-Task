@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Personal blog
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'add-post' %}">Add a new post</a>
+<ul>
+    {% for news in post_list %}
+        <li>
+           <p>{{ news.title }}</p>
+           <p>{{ news.text }}</p>
+           <p>{{ news.timestamp }}</p>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

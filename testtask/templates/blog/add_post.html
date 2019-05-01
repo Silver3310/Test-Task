@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Add a post
+{% endblock %}
+
+{% block content %}
+<form method="post" action="{% url 'add-post' %}">{% csrf_token %}
+    {% for field in form %}
+     <div class="form-group">
+         <p>{{field.errors}}</p>
+         <label>{{field.label}}</label>
+         <div>{{field}}</div>
+     </div>
+    {% endfor %}
+    <button type="submit">Post</button>
+</form>
+{% endblock %}

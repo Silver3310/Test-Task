@@ -11,7 +11,7 @@
     <nav>
         <a href="{% url 'bloggers' %}">Bloggers</a>
         <a href="{% url 'news-feed' %}">News Feed</a>
-        <a href="#">My blog</a>
+        <a href="{% url 'personal-blog' %}">My blog</a>
     </nav>
     {% block content %}
     {% endblock %}

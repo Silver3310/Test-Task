@@ -1,11 +1,13 @@
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
+from django.views.generic.edit import FormView
 from django.views import View
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
-from .models import Subscription, Post, ReadPosts
+from .models import Subscription, Post, ReadPosts, Blog
+from .forms import PostForm
 
 
 class HomePageView(TemplateView):
@@ -97,3 +99,27 @@ class ReadNewsView(View):
             ).save()
 
         return HttpResponseRedirect(reverse('news-feed'))
+
+
+class PostFormView(FormView):
+    form_class = PostForm
+    template_name = 'blog/add_post.html'
+    success_url = reverse_lazy('add-post')
+
+    def form_valid(self, form):
+        Post.objects.create(
+            title=form.cleaned_data['title'],
+            text=form.cleaned_data['text'],
+            blog=Blog.objects.get(user=self.request.user)
+        )
+        return super().form_valid(form)
+
+
+class PersonalBlogListView(ListView):
+    template_name = 'blog/personal_blog.html'
+    paginate_by = 100
+
+    def get_queryset(self):
+        blog = Blog.objects.get(user=self.request.user)
+        queryset = Post.objects.filter(blog=blog).order_by('-timestamp')
+        return queryset
