@@ -8,9 +8,7 @@ News Feed
 <ul>
     {% for news in post_list %}
         <li>
-           <p>{{ news.title }}</p>
-           <p>{{ news.text }}</p>
-           <p>{{ news.timestamp }}</p>
+            <p><a href="{% url 'post-detail' pk=news.pk %}">{{ news.title }}</a></p>
            <form method="post" action="{% url 'read-news' news_id=news.id %}">{% csrf_token %}
            {% if news.id in read_news %}
                <button type="submit">Mark as unread</button>

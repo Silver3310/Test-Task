@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django_auto_one_to_one import AutoOneToOneModel
+from django.core.mail import send_mail
+from django.conf import settings
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 
 class Blog(AutoOneToOneModel(get_user_model())):
@@ -39,6 +43,35 @@ class Post(models.Model):
         Blog,
         on_delete=models.CASCADE
     )
+
+    def save(
+            self,
+            force_insert=False,
+            force_update=False,
+            using=None,
+            update_fields=None
+    ):
+        """
+        This method is overridden in order to send notifications via email
+        """
+        super().save(
+            force_insert=False,
+            force_update=False,
+            using=None,
+            update_fields=None
+        )
+        self.email(self.blog.user, self.pk)
+
+    def email(self, user, pk):
+        """
+        send an email as a notification to other users
+        """
+        subject = f'New Post from your subscriber {user}'
+        message = settings.SITE_URL + '/detail-info/' + str(pk) + '/'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = Subscription.all_subscribers_emails(user)
+        send_mail(subject, message, email_from, recipient_list)
+        return HttpResponseRedirect(reverse('index'))
 
     def __str__(self):
         return self.title

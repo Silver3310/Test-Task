@@ -1,6 +1,7 @@
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
+from django.views.generic.detail import DetailView
 from django.views import View
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
@@ -117,7 +118,6 @@ class PostFormView(FormView):
             text=form.cleaned_data['text'],
             blog=Blog.objects.get(user=self.request.user)
         )
-        email(self.request)
         return super().form_valid(form)
 
 
@@ -134,13 +134,9 @@ class PersonalBlogListView(ListView):
         return queryset
 
 
-def email(request):
+class PostDetailView(DetailView):
     """
-    send an email as a notification to other users
+    Detail view for posts
     """
-    subject = f'New Post from your subscriber {request.user}'
-    message = 'link'
-    email_from = settings.EMAIL_HOST_USER
-    recipient_list = Subscription.all_subscribers_emails(request.user)
-    send_mail(subject, message, email_from, recipient_list)
-    return HttpResponseRedirect(reverse('index'))
+
+    model = Post

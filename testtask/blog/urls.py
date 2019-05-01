@@ -38,5 +38,10 @@ urlpatterns = [
         'personal-blog/',
         views.PersonalBlogListView.as_view(),
         name='personal-blog'
+    ),
+    path(
+        'detail-info/<int:pk>/',
+        views.PostDetailView.as_view(),
+        name='post-detail'
     )
 ]

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Personal blog
+{% endblock %}
+
+{% block content %}
+<p>{{ object.title }}</p>
+<p>{{ object.text }}</p>
+<p>{{ object.timestamp }}</p>
+<p>{{ object.blog }}</p>
+{% endblock %}

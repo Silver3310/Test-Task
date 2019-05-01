@@ -9,9 +9,7 @@ Personal blog
 <ul>
     {% for news in post_list %}
         <li>
-           <p>{{ news.title }}</p>
-           <p>{{ news.text }}</p>
-           <p>{{ news.timestamp }}</p>
+            <a href="{% url 'post-detail' pk=news.pk %}">{{ news.title }}</a>
         </li>
     {% endfor %}
 </ul>
